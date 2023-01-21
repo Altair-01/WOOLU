@@ -26,9 +26,7 @@ class _AppCubitLogicsState extends State<AppCubitLogics> {
       body: BlocBuilder<AppCubits, CubitStates>(
         builder: (context, state){
           if(state is WelcomeState){
-            return VotePage();
-          }if(state is LoadedState) {
-            return UserInfromationScreen();
+            return WelcomePage();
           }
           if(state is ErrorState) {
             return ErrorPage();
@@ -38,15 +36,19 @@ class _AppCubitLogicsState extends State<AppCubitLogics> {
           }
           if(state is LoginState) {
             return OtpPage(verificationId: '',);
-          }
+          }if(state is LoadedState) {
+            return VotePage();
+          }/*
           if(state is VotingState) {
             return VotePage();
+          }*/
+          if(state is VotedState) {
+            return Center(child: AppText(text: "Voté !",),);
           }if(state is LoadingState) {
             return Center(child: CircularProgressIndicator(),);
           }
-          if(state is VotedState) {
-            return Center(child: AppText(text: "Voté !",),);
-          }else{
+          else{
+
             return Container();
           }
         },

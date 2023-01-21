@@ -68,11 +68,14 @@ class _WelcomePageState extends State<WelcomePage> {
 
                         GestureDetector(
                           onTap: (){
-                            //BlocProvider.of<AppCubits>(context).vote();
-                            ap.isSignedIn == true
-                            ? BlocProvider.of<AppCubits>(context).vote()
+                            //pour avoir directement la page de vote avec les informations de la bd
+                            BlocProvider.of<AppCubits>(context).otpvalidation();
+
+                            //pour avoir otp validation
+                            /*ap.isSignedIn == true
+                            ? BlocProvider.of<AppCubits>(context).getData()//vote()
                             : BlocProvider.of<AppCubits>(context).otpvalidation();//si il n'est pas connecte
-                          },
+                          */},
                           child: Container(
                               width:200,
                               child:Row (children:[ResponsiveButton(width: 120,)])),

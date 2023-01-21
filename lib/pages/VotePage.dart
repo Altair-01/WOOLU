@@ -38,7 +38,7 @@ class _VotePageState extends State<VotePage> {
     return Scaffold(
       body: BlocBuilder<AppCubits, CubitStates>(
         builder: (context, state){
-          if(state is VotingState){
+          if(state is /*VotingState*/LoadedState){
             var info = state.candidates;
             return PageView.builder(
                       scrollDirection: Axis.vertical,
@@ -133,8 +133,9 @@ class _VotePageState extends State<VotePage> {
                       });
 
 
-          } else{
-            return Center(child: Text("erreur votePage"),);
+          } else{            print('${state}');
+
+          return Center(child: Text("erreur votePage"),);
           }
         },
       )

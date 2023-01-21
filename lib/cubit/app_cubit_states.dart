@@ -20,9 +20,11 @@ class LoadingState extends CubitStates{
 }
 
 class LoadedState extends CubitStates{
+  LoadedState(this.candidates);
+  final List<DataModel> candidates;
   @override
 // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [candidates];
 }
 
 class LoginState extends CubitStates{
@@ -48,10 +50,11 @@ class VotedState extends CubitStates{
 // TODO: implement props
   List<Object?> get props => [];
 }
+/*
 class VotingState extends CubitStates{
   VotingState(this.candidates);
   final List<DataModel> candidates;
   @override
 // TODO: implement props
   List<Object?> get props => [candidates];
-}
+}*/

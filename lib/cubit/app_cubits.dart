@@ -7,11 +7,13 @@ class AppCubits extends Cubit<CubitStates>{
   AppCubits({required this.data}) : super(InitialState()){
     emit(WelcomeState());
   }
-
+  final DataServices data;
+  late final candidates;
   void getData()async{
     try{
-      emit(LoadedState());
-
+      emit(LoadingState());
+      candidates = await data.getInfo();
+      emit(LoadedState(candidates));
     }catch(e){
 
     }
@@ -25,7 +27,7 @@ class AppCubits extends Cubit<CubitStates>{
     }
   }
 
-  final DataServices data;
+ /* final DataServices data;
   late final candidates;
   void vote() async{
     try {
@@ -35,7 +37,7 @@ class AppCubits extends Cubit<CubitStates>{
     }catch(e){
 
     }
-  }
+  }*/
 
   void errorpage() async{
     try {

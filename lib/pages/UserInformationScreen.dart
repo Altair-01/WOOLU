@@ -1,13 +1,18 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:vote/pages/WelcomePage.dart';
 import 'package:image_picker/image_picker.dart';
+import '../cubit/app_cubits.dart';
 import '../model/user_model.dart';
 import '../provider/auth_provider.dart';
 import '../utils/utils.dart';
+import '../widget/app_large_text.dart';
+import '../widget/app_text.dart';
 import '../widget/custom_button.dart';
+import '../widget/responsive_button.dart';
 
 class UserInfromationScreen extends StatefulWidget {
   const UserInfromationScreen({super.key});
@@ -36,153 +41,59 @@ class _UserInfromationScreenState extends State<UserInfromationScreen> {
     final isLoading =
         Provider.of<AuthProvider>(context, listen: true).isLoading;
     return Scaffold(
-      body: SafeArea(
-        child: isLoading == true
-            ? const Center(
-          child: CircularProgressIndicator(
-            color: Colors.purple,
-          ),
-        )
-            : SingleChildScrollView(
-          padding:
-          const EdgeInsets.symmetric(vertical: 25.0, horizontal: 5.0),
-          child: Center(
-            child: Column(
-              children: [
+      body: PageView.builder(
+          scrollDirection: Axis.vertical,
+          itemCount: 3,//images.length,
+          itemBuilder: (_,index){
+            return Container(
+              width: double.maxFinite,
+              height: double.maxFinite,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                        "images/mimi.jpg"
+                    ),
+                    fit: BoxFit.cover,
+                  )
+              ),
+              child: Container(
+                margin: const EdgeInsets.only(top:150, left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
 
+                        SizedBox(height: 40,),
 
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 5, horizontal: 15),
-                  margin: const EdgeInsets.only(top: 20),
-                  child: Column(
-                    children: [
-                      // name field
-                      textFeld(
-                        hintText: "John Smith",
-                        icon: Icons.account_circle,
-                        inputType: TextInputType.name,
-                        maxLines: 1,
-                        controller: nameController,
-                      ),
-
-                      // email
-                      textFeld(
-                        hintText: "abc@example.com",
-                        icon: Icons.email,
-                        inputType: TextInputType.emailAddress,
-                        maxLines: 1,
-                        controller: emailController,
-                      ),
-
-                      // bio
-                      textFeld(
-                        hintText: "Enter your bio here...",
-                        icon: Icons.edit,
-                        inputType: TextInputType.name,
-                        maxLines: 2,
-                        controller: bioController,
-                      ),
-                    ],
-                  ),
+                        GestureDetector(
+                          onTap: () {
+                            BlocProvider.of<AppCubits>(context).getData();
+                          },
+                          child: Container(
+                              width:200,
+                              child:Row (children:[ResponsiveButton(width: 120,)])),
+                        ),
+                      ],
+                    ),
+                    Column(children: List.generate(1, (indexDots){
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 2),
+                        width: 8,
+                        height: index==indexDots?25:8,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          //color: index==indexDots?AppColors.mainColor:AppColors.mainColor.withOpacity(0.3),
+                        ),
+                      );
+                    }),)
+                  ],
                 ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width * 0.90,
-                  child: CustomButton(
-                    text: "Continue",
-                    onPressed: () => storeData(),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget textFeld({
-    required String hintText,
-    required IconData icon,
-    required TextInputType inputType,
-    required int maxLines,
-    required TextEditingController controller,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: TextFormField(
-        cursorColor: Colors.purple,
-        controller: controller,
-        keyboardType: inputType,
-        maxLines: maxLines,
-        decoration: InputDecoration(
-          prefixIcon: Container(
-            margin: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.purple,
-            ),
-            child: Icon(
-              icon,
-              size: 20,
-              color: Colors.white,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Colors.transparent,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Colors.transparent,
-            ),
-          ),
-          hintText: hintText,
-          alignLabelWithHint: true,
-          border: InputBorder.none,
-          fillColor: Colors.purple.shade50,
-          filled: true,
-        ),
-      ),
-    );
-  }
-
-  // store user data to database
-  void storeData() async {
-    final ap = Provider.of<AuthProvider>(context, listen: false);
-    UserModel userModel = UserModel(
-      name: nameController.text.trim(),
-      email: emailController.text.trim(),
-      bio: bioController.text.trim(),
-      profilePic: "",
-      createdAt: "",
-      phoneNumber: "",
-      uid: "",
-    );
-
-      ap.saveUserDataToFirebase(
-        context: context,
-        userModel: userModel,
-        onSuccess: () {
-          ap.saveUserDataToSP().then(
-                (value) => ap.setSignIn().then(
-                  (value) => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const WelcomePage(),
-                  ),
-                      (route) => false),
-            ),
-          );
-        },
-      );
-
+              ),
+            );
+          }),
+    ) ;
   }
 }

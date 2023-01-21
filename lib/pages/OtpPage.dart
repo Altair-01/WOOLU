@@ -142,6 +142,8 @@ class _OtpPageState extends State<OtpPage> {
 
                             if(otpCode != null){
                               verifyOtp(context, otpCode!);
+                              //J'AI RAJOUTÉ CETTE LIGNE DE CODE POUR QUE ÇA MARCHE
+                              BlocProvider.of<AppCubits>(context).getData();
                             }else{
                               showSnackBar(context, "Enter 6-Digit code");
                             }
@@ -223,6 +225,9 @@ class _OtpPageState extends State<OtpPage> {
       verificationId: widget.verificationId,
       userOtp: userOtp,
       onSuccess: () {
+        //ESSAYER DE METTRE ÇA À LA PLACE DE CHECKexistinguser();
+        //BlocProvider.of<AppCubits>(context).getData();
+
         // checking whether user exists in the db
         ap.checkExistingUser().then(
               (value) async {
@@ -234,9 +239,9 @@ class _OtpPageState extends State<OtpPage> {
                         (value) => Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const WelcomePage(),
+                          builder: (context) => const UserInfromationScreen(),
                         ),
-                            (route) => false),
+                            (route) => true),
                   ),
                 ),
               );
@@ -254,6 +259,18 @@ class _OtpPageState extends State<OtpPage> {
     );
   }
 /*
+
+    GestureDetector(
+                          onTap: (){
+                            //BlocProvider.of<AppCubits>(context).getData();
+                            ap.isSignedIn == true
+                            ? BlocProvider.of<AppCubits>(context).getData()//vote()
+                            : BlocProvider.of<AppCubits>(context).otpvalidation();//si il n'est pas connecte
+                          },
+                          child: Container(
+                              width:200,
+                              child:Row (children:[ResponsiveButton(width: 120,)])),
+                        ),
   Widget _textFieldOTP({bool? first, last}) {
     return Container(
       height: 45,
