@@ -101,7 +101,7 @@ class _VotePageState extends State<VotePage> {
 
                                     GestureDetector(
                                       onTap: () {
-                                        // BlocProvider.of<AppCubits>(context).getData();
+                                         BlocProvider.of<AppCubits>(context).vote();
                                       },
                                       child: Container(
                                           width: 382,
@@ -135,7 +135,7 @@ class _VotePageState extends State<VotePage> {
 
           } else{            print('${state}');
 
-          return Center(child: Text("erreur votePage"),);
+          return Center(child: AppText(text: "Voté !",),);
           }
         },
       )

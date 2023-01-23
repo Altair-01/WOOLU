@@ -27,17 +27,16 @@ class AppCubits extends Cubit<CubitStates>{
     }
   }
 
- /* final DataServices data;
-  late final candidates;
+
   void vote() async{
     try {
-      emit(LoadingState());
-      candidates = await data.getInfo();
-      emit(VotingState(candidates));
+      emit( VotedState());
+     // candidates = await data.getInfo();
+     // emit(VotingState(candidates));
     }catch(e){
 
     }
-  }*/
+  }
 
   void errorpage() async{
     try {
