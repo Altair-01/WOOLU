@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vote/cubit/app_cubit_states.dart';
 import 'package:vote/misc/colors.dart';
-import 'package:vote/widget/app_buttons.dart';
+import 'package:vote/model/data_model.dart';
 import 'package:vote/widget/app_text.dart';
-import 'package:vote/widget/card_vote.dart';
-
+import 'package:http/http.dart' as http;
 import '../cubit/app_cubits.dart';
-import '../misc/color_filters.dart';
 import '../widget/app_large_text.dart';
-import '../widget/responsive_button.dart';
-
+import 'dart:convert';
 class VotePage extends StatefulWidget {
   const VotePage({Key? key}) : super(key: key);
 
@@ -18,9 +15,9 @@ class VotePage extends StatefulWidget {
   State<VotePage> createState() => _VotePageState();
 }
 
+//first_name
+
 class _VotePageState extends State<VotePage> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
   List total = ["1","2","3"];
   List images = [
     "mimi.jpg",
@@ -31,7 +28,18 @@ class _VotePageState extends State<VotePage> {
     "Mimi Touré", "Ousmane Sonko", "Macky Sall"
   ];
 
+  final _data = {'first_name':'first_name',
+    'last_name':'last_name'};
+  Future<DataModel?> postData(DataModel _dataModel) async {
+    var response = await http.post(
+        Uri.https('deeloma.com','woolu/addCandidate'),
+        body: json.encode(_dataModel.toJson()));
+    var data = response.body;
+    print(data);
 
+
+
+  }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -84,7 +92,7 @@ class _VotePageState extends State<VotePage> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     AppLargeText(text: "Candidat(e)"),
-                                    AppText(text: info[index].firstName+' '+info[index].lastName, size: 30,color: AppColors.mainColor,),
+                                    AppText(text: info[index].first_name+' '+info[index].last_name, size: 30,color: AppColors.mainColor,),
 
                                     SizedBox(height: 550,),
                                     Center(
@@ -107,7 +115,16 @@ class _VotePageState extends State<VotePage> {
                                           width: 382,
                                           child: Row(
                                               children: [
-                                                ResponsiveButton(width: double.maxFinite,)
+                                                TextButton(onPressed: () async {
+                                                  String first_name = info[index].first_name;
+                                                  String last_name = info[index].last_name;
+
+                                                  final _datamodel = DataModel(first_name: first_name,last_name: last_name);
+
+                                                  postData(_datamodel);
+
+                                                }, child: Text("Bouton"))
+                                                //ResponsiveButton(width: double.maxFinite,)
                                                 //AppButtons(size: 20, color: AppColors.textColor2, backgroundColor: AppColors.buttonBackground, borderColor: AppColors.textColor1)
                                               ])),
                                     ),

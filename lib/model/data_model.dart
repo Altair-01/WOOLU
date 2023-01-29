@@ -1,22 +1,30 @@
-import 'dart:ffi';
+import 'dart:convert';
+
+DataModel dataModelFromJson(String str) => DataModel.fromJson(json.decode(str));
+String dataModelToJson(DataModel data) => json.encode(data.toJson());
 
 class DataModel{
-  String firstName;
-  String lastName;
+
+ late String first_name;
+ late String last_name;
   //String politique;
   //Long id;
 
   DataModel({
-    required this.firstName,
-    required this.lastName,
-    //required this.politique,
-   // required this.id,
+    this.first_name ="",
+    this.last_name="",
+    //required this.createat
   });
 
-  factory DataModel.fromJson(Map<String, dynamic> json){
-    return DataModel(firstName: json["first_name"],
-        lastName: json["last_name"]);
+  factory DataModel.fromJson(Map<String, dynamic> map) =>
+      DataModel(
+          first_name: map["first_name"],
+        last_name: map["last_name"],
        // politique: json["politique"],
        // id: json["id"]);
-  }
+  );
+
+  Map<String, dynamic> toJson() => {
+    "last_name": last_name,
+    "first_name": first_name,  };
 }
